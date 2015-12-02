@@ -1,40 +1,84 @@
-final int WINDOW_SIZE = 400;
-final int HALF_SIZE = WINDOW_SIZE / 2;
+final int SIZE = 400;
+final int HALF_SIZE = SIZE / 2;
+final float BOX_SIZE = sqrt(SIZE);
+final float ORIGIN = HALF_SIZE;
 
-int width, height;
-float x, y;
 // Bumubuo ng mga kahon
 void createModuloArt() {
 }
 
-void init() {
-  width = 0;
-  height = 0;
-  x = 0;
-  y = 0;
+void createGrids() {
+  float fX = 0;
+  float fY = 0;
+  for(int i = 1; i <= SIZE; i++) {
+    if(fX == 0 || fX == SIZE - BOX_SIZE || fY == 0 || fY == SIZE - BOX_SIZE) {
+      fill(#AA0000);
+    } else {
+      fill(#AADD00);
+    }
+    rect(fX, fY, BOX_SIZE, BOX_SIZE);
+    
+    fX += BOX_SIZE;
+    if(i % BOX_SIZE == 0) {
+      fY+=BOX_SIZE;
+      fX = 0;
+    } 
+  }
+}
+
+void createQuadrant(int quadNum) {
+  float x = 0;
+  float y = 0;
+  fill(#FFFFFF);
+  for(int _y=1; _y <= 4; _y++) {
+    float ySize = 0;
+    float xSize = 0;
+    x = 0;
+    for(int _x=1; _x <= 4; _x++) {
+      xSize = _x * BOX_SIZE;
+      ySize = _y * BOX_SIZE;
+      
+      
+      float quadX = 0;
+      float quadY = 0;
+      switch(quadNum) {
+        case 1:  
+          quadX = ORIGIN+x;
+          quadY = ORIGIN+y;
+        break;
+        case 2:
+          quadX = ORIGIN+x;
+          quadY = ORIGIN-y;
+        break;
+        case 3:
+          quadX = ORIGIN-x;
+          quadY = ORIGIN-y;
+        break;
+        case 4:
+          quadX = ORIGIN-x;
+          quadY = ORIGIN+y;
+        break;
+      }
+      
+      rect(quadX, quadY, xSize, ySize);
+      x += xSize;
+    }
+    y += ySize;
+  }
 }
 
 void setup() {
   // Constant ang mas maganda kaso ayaw ng processing
   size(400, 400);
-  init();
 }
 
 void draw() {
-  for(int i=1; i <= 4; i++) {
-    // 400^1/4
-    float relativeWidth = pow(WINDOW_SIZE, 0.25);
-    float relativeHeight = pow(WINDOW_SIZE, 0.25);
-    
-    relativeWidth *= i;
-    relativeHeight *= i;
-    
-    float relativeWidthHalfSize = relativeWidth / 2;
-    float relativeHeightHalfSize = relativeHeight / 2;
-    
-    x = HALF_SIZE - relativeWidthHalfSize;
-    y = HALF_SIZE - relativeHeightHalfSize;
-    
-    rect(x, y, relativeWidth, relativeHeight);
-  }
+  background(#7fff00);
+  
+  createGrids();
+  
+  //createQuadrant(1);
+  createQuadrant(2);
+  //createQuadrant(2);
+  createQuadrant(2);
 }
