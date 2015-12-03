@@ -161,15 +161,18 @@ void mouseClicked() {
 }
 
 void keyPressed() {
-  createModuloData();
+  if (key != 's' && key != 'S') {
+      createModuloData();
+  }
+}
+
+void keyReleased() {
+  if (key == 's' || key == 'S') {
+      saveFrame("Arts/Modulo-Art" + year() + month() + day() + hour() + minute() + second() + millis() + ".png");
+  }
 }
 
 void draw() {
-  if (keyPressed) {
-    if (key == 's' || key == 'S') {
-      saveFrame("Modulo-Art" + year() + month() + day() + hour() + minute() + second() + millis() + ".png");
-    }
-  }
   
   createQuadrant(1);
   createQuadrant(2);
