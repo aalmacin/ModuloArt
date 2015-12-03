@@ -5,23 +5,32 @@ final float ORIGIN = HALF_SIZE;
 final int MAX = 4;
 
 
-float[][] shapeData = new float[MAX][2];
-int[][] colorData = new int[MAX][3];
+ArrayList<ArrayList> shapeData = new ArrayList<ArrayList>();
+ArrayList<ArrayList> colorData = new ArrayList<ArrayList>();
+
+void reshuffle() {
+  shapeData.add(shapeData.remove(0));
+  colorData.add(colorData.remove(0));
+}
 
 void createModuloData() {
+  shapeData = new ArrayList<ArrayList>();
+  colorData = new ArrayList<ArrayList>();
   for(int i = 0; i < MAX; i++) {
-    int[] colors = new int[3];
-    colors[0] = floor(random(0, 255));
-    colors[1] = floor(random(0, 255));
-    colors[2] = floor(random(0, 255));
+    ArrayList<Integer> colors = new ArrayList<Integer>();
+    colors.add(floor(random(0, 255)));
+    colors.add(floor(random(0, 255)));
+    colors.add(floor(random(0, 255)));
     
-    colorData[i] = colors;
+    colorData.add(colors);
     
-    float[] shape = new float[2];
-    shape[0] = random(0, 100) / 100;
-    shape[1] = random(0, 100) / 100;
+    ArrayList<Float> shape = new ArrayList<Float>();
+    shape.add(random(0, 100) / 100); // x1
+    shape.add(random(0, 100) / 100); // x2
+    shape.add(random(0, 100) / 100); // y1
+    shape.add(random(0, 100) / 100); // y2
     
-    shapeData[i] = shape;
+    shapeData.add(shape);
   }
   
   // x + (width * 0.10)
@@ -30,9 +39,6 @@ void createModuloData() {
 
 // Bumubuo ng mga kahon
 void createModuloArt() {
-  createModuloData();
-  
-  
 }
 
 void createGrids() {
@@ -87,12 +93,13 @@ void createQuadrant(int quadNum) {
   float currentY = 0;
   int[] operations = checkQuadrant(quadNum);
   
-  fill(#FFFFFF);
   
   for(int vCount = 1; vCount <= MAX; vCount++) {
     currentX = 0;
+    
     float currentBoxHeight = 0;
     for(int hCount = 1; hCount <= MAX; hCount++) {
+      int i = hCount - 1;
       float currentBoxWidth = 0;
       
       currentBoxWidth = hCount * operations[0] * BOX_SIZE;
@@ -100,27 +107,42 @@ void createQuadrant(int quadNum) {
       float quadX = ORIGIN + (operations[0] * currentX);
       float quadY = ORIGIN + (operations[1] * currentY);
       
-      noStroke();
+      ArrayList<Integer> currentColor = colorData.get(i);
+      fill(currentColor.get(0), currentColor.get(1), currentColor.get(2));
       rect(quadX, quadY, currentBoxWidth, currentBoxHeight);
+      
+      ArrayList<Float> currentShape = shapeData.get(i);
+      
+      
+      bezier(quadX, quadY, 
+              quadX + (currentBoxWidth * currentShape.get(0)), quadY + (currentBoxHeight * currentShape.get(1)), 
+              quadX + (currentBoxWidth * currentShape.get(2)), quadY + (currentBoxHeight * currentShape.get(3)),
+              quadX + currentBoxWidth, quadY + currentBoxHeight);
       
       currentX += (currentBoxWidth * operations[0]);
     }
     currentY += (currentBoxHeight * operations[1]);
+    reshuffle();
   }
 }
 
 void setup() {
   // Constant ang mas maganda kaso ayaw ng processing
   size(400, 400);
-  background(#7fff00);
+ // background(#7fff00);
   
-  createGrids();
+  //createGrids();
   
+  createModuloData();
+}
+
+void mouseClicked() {
+  createModuloData();
+}
+
+void draw() {
   createQuadrant(1);
   createQuadrant(2);
   createQuadrant(3);
   createQuadrant(4);
-}
-
-void draw() {
 }
