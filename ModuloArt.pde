@@ -1,4 +1,4 @@
-final int SIZE = 500;
+final int SIZE = 600;
 final int HALF_SIZE = SIZE / 2;
 final float BOX_SIZE = sqrt(SIZE);
 final float ORIGIN = HALF_SIZE;
@@ -10,7 +10,7 @@ ArrayList<ArrayList> colorData = new ArrayList<ArrayList>();
 
 void setup() {
   // Constant ang mas maganda kaso ayaw ng processing
-  size(500, 500);
+  size(600, 600);
  // background(#7fff00);
   
   //createGrids();
@@ -41,9 +41,9 @@ void createModuloData() {
     
     ArrayList<Float> shape = new ArrayList<Float>();
     shape.add(random(0, 100) / 100); // x1
-    shape.add(random(0, 100) / 100); // x2
+    shape.add(random(50, 100) / 100); // x2
     shape.add(random(0, 100) / 100); // y1
-    shape.add(random(0, 100) / 100); // y2
+    shape.add(random(50, 100) / 100); // y2
     shape.add(random(0, 1));
     
     shapeData.add(shape);
@@ -136,18 +136,18 @@ void createQuadrant(int quadNum) {
       float y2 = quadY + (currentBoxHeight * currentShape.get(1));
       float x3 = quadX + (currentBoxWidth * currentShape.get(2));
       float y3 = quadY + (currentBoxHeight * currentShape.get(3));
-      float x4 = quadX + currentBoxWidth;
-      float y4 = quadY + currentBoxHeight;
       
       if (currentShape.get(4) == 1) {
-        x1 = x4;
-        y1 = y4;
-        x4 = quadX;
-        y4 = quadY;
+        x1 = quadX + currentBoxWidth;
+        y1 = quadY + currentBoxHeight;
       }
       
-      stroke(currentColor.get(3), currentColor.get(4),  currentColor.get(5));
-      bezier(x1, y1, x2, y2, x3, y3, x4, y4);
+      fill(currentColor.get(3), currentColor.get(4),  currentColor.get(5));
+      beginShape();
+      vertex(quadX, quadY);
+      vertex(quadX + currentBoxWidth, quadY + currentBoxHeight);
+      bezierVertex(x2, y2, x3, y3, x1, y1);
+      endShape(CLOSE);
       
       currentX += (currentBoxWidth * operations[0]);
     }
@@ -165,6 +165,12 @@ void keyPressed() {
 }
 
 void draw() {
+  if (keyPressed) {
+    if (key == 's' || key == 'S') {
+      saveFrame("Modulo-Art" + year() + month() + day() + hour() + minute() + second() + millis() + ".png");
+    }
+  }
+  
   createQuadrant(1);
   createQuadrant(2);
   createQuadrant(3);
