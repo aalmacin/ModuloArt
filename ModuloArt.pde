@@ -29,6 +29,7 @@ void createModuloData() {
     shape.add(random(0, 100) / 100); // x2
     shape.add(random(0, 100) / 100); // y1
     shape.add(random(0, 100) / 100); // y2
+    shape.add(random(0, 1));
     
     shapeData.add(shape);
   }
