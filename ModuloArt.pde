@@ -2,9 +2,28 @@ final int SIZE = 400;
 final int HALF_SIZE = SIZE / 2;
 final float BOX_SIZE = sqrt(SIZE);
 final float ORIGIN = HALF_SIZE;
+final int MAX = 4;
+
+
+int[] shapeData = new int[MAX];
+int[][] colorData = new int[MAX][3];
+
+void createModuloData() {
+  for(int i = 0; i < MAX; i++) {
+    int[] colors = new int[3];
+    colors[0] = floor(random(0, 255));
+    colors[1] = floor(random(0, 255));
+    colors[2] = floor(random(0, 255));
+    
+    colorData[i] = colors;
+  }
+}
 
 // Bumubuo ng mga kahon
 void createModuloArt() {
+  createModuloData();
+  
+  
 }
 
 void createGrids() {
@@ -61,26 +80,24 @@ void createQuadrant(int quadNum) {
   
   fill(#FFFFFF);
   
-  for(int vCount = 1; vCount <= 4; vCount++) {
+  for(int vCount = 1; vCount <= MAX; vCount++) {
     currentX = 0;
     float currentBoxHeight = 0;
-    for(int hCount = 1; hCount <= 4; hCount++) {
+    for(int hCount = 1; hCount <= MAX; hCount++) {
       float currentBoxWidth = 0;
       
       currentBoxWidth = hCount * operations[0] * BOX_SIZE;
       currentBoxHeight = vCount * operations[1] * BOX_SIZE;
       float quadX = ORIGIN + (operations[0] * currentX);
       float quadY = ORIGIN + (operations[1] * currentY);
-      println(quadX, currentY);
       
+      noStroke();
       rect(quadX, quadY, currentBoxWidth, currentBoxHeight);
       
       currentX += (currentBoxWidth * operations[0]);
     }
     currentY += (currentBoxHeight * operations[1]);
   }
-  
-  
 }
 
 void setup() {
