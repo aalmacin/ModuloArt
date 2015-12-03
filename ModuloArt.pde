@@ -26,59 +26,75 @@ void createGrids() {
   }
 }
 
+// Returns the operations for x and y respectively.
+int[] checkQuadrant(int quadNum) {
+      int[] operations = new int[2];
+       switch(quadNum) {
+         case 1:  
+           operations[0] = 1;
+           operations[1] = -1;
+         break;
+         case 2:
+           operations[0] = -1;
+           operations[1] = -1;
+         break;
+         case 3:
+           operations[0] = -1;
+           operations[1] = 1;
+         break;
+         case 4:
+           operations[0] = 1;
+           operations[1] = 1;
+         break;
+         default:
+           operations[0] = 1;
+           operations[1] = 1;
+         break;
+       }
+       return operations;
+}
+
 void createQuadrant(int quadNum) {
-  float x = 0;
-  float y = 0;
+  float currentX = 0;
+  float currentY = 0;
+  int[] operations = checkQuadrant(quadNum);
+  
   fill(#FFFFFF);
-  for(int _y=1; _y <= 4; _y++) {
-    float ySize = 0;
-    float xSize = 0;
-    x = 0;
-    for(int _x=1; _x <= 4; _x++) {
-      xSize = _x * BOX_SIZE;
-      ySize = _y * BOX_SIZE;
+  
+  for(int vCount = 1; vCount <= 4; vCount++) {
+    currentX = 0;
+    float currentBoxHeight = 0;
+    for(int hCount = 1; hCount <= 4; hCount++) {
+      float currentBoxWidth = 0;
       
+      currentBoxWidth = hCount * operations[0] * BOX_SIZE;
+      currentBoxHeight = vCount * operations[1] * BOX_SIZE;
+      float quadX = ORIGIN + (operations[0] * currentX);
+      float quadY = ORIGIN + (operations[1] * currentY);
+      println(quadX, currentY);
       
-      float quadX = 0;
-      float quadY = 0;
-      switch(quadNum) {
-        case 1:  
-          quadX = ORIGIN+x;
-          quadY = ORIGIN+y;
-        break;
-        case 2:
-          quadX = ORIGIN+x;
-          quadY = ORIGIN-y;
-        break;
-        case 3:
-          quadX = ORIGIN-x;
-          quadY = ORIGIN-y;
-        break;
-        case 4:
-          quadX = ORIGIN-x;
-          quadY = ORIGIN+y;
-        break;
-      }
+      rect(quadX, quadY, currentBoxWidth, currentBoxHeight);
       
-      rect(quadX, quadY, xSize, ySize);
-      x += xSize;
+      currentX += (currentBoxWidth * operations[0]);
     }
-    y += ySize;
+    currentY += (currentBoxHeight * operations[1]);
   }
+  
+  
 }
 
 void setup() {
   // Constant ang mas maganda kaso ayaw ng processing
   size(400, 400);
-}
-
-void draw() {
   background(#7fff00);
   
   createGrids();
   
-  //createQuadrant(1);
+  createQuadrant(1);
   createQuadrant(2);
-  //createQuadrant(2);
-  createQuadrant(2);
+  createQuadrant(3);
+  createQuadrant(4);
+}
+
+void draw() {
 }
