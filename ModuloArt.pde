@@ -1,12 +1,22 @@
-final int SIZE = 400;
+final int SIZE = 500;
 final int HALF_SIZE = SIZE / 2;
 final float BOX_SIZE = sqrt(SIZE);
 final float ORIGIN = HALF_SIZE;
-final int MAX = 4;
+final int MAX = round(pow(SIZE, 0.25));
 
 
 ArrayList<ArrayList> shapeData = new ArrayList<ArrayList>();
 ArrayList<ArrayList> colorData = new ArrayList<ArrayList>();
+
+void setup() {
+  // Constant ang mas maganda kaso ayaw ng processing
+  size(500, 500);
+ // background(#7fff00);
+  
+  //createGrids();
+  
+  createModuloData();
+}
 
 void reshuffle() {
   shapeData.add(shapeData.remove(0));
@@ -18,6 +28,11 @@ void createModuloData() {
   colorData = new ArrayList<ArrayList>();
   for(int i = 0; i < MAX; i++) {
     ArrayList<Integer> colors = new ArrayList<Integer>();
+    colors.add(floor(random(0, 255)));
+    colors.add(floor(random(0, 255)));
+    colors.add(floor(random(0, 255)));
+    
+    // Stroke
     colors.add(floor(random(0, 255)));
     colors.add(floor(random(0, 255)));
     colors.add(floor(random(0, 255)));
@@ -110,15 +125,29 @@ void createQuadrant(int quadNum) {
       
       ArrayList<Integer> currentColor = colorData.get(i);
       fill(currentColor.get(0), currentColor.get(1), currentColor.get(2));
+      noStroke();
       rect(quadX, quadY, currentBoxWidth, currentBoxHeight);
       
       ArrayList<Float> currentShape = shapeData.get(i);
       
+      float x1 = quadX;
+      float y1 = quadY;
+      float x2 = quadX + (currentBoxWidth * currentShape.get(0));
+      float y2 = quadY + (currentBoxHeight * currentShape.get(1));
+      float x3 = quadX + (currentBoxWidth * currentShape.get(2));
+      float y3 = quadY + (currentBoxHeight * currentShape.get(3));
+      float x4 = quadX + currentBoxWidth;
+      float y4 = quadY + currentBoxHeight;
       
-      bezier(quadX, quadY, 
-              quadX + (currentBoxWidth * currentShape.get(0)), quadY + (currentBoxHeight * currentShape.get(1)), 
-              quadX + (currentBoxWidth * currentShape.get(2)), quadY + (currentBoxHeight * currentShape.get(3)),
-              quadX + currentBoxWidth, quadY + currentBoxHeight);
+      if (currentShape.get(4) == 1) {
+        x1 = x4;
+        y1 = y4;
+        x4 = quadX;
+        y4 = quadY;
+      }
+      
+      stroke(currentColor.get(3), currentColor.get(4),  currentColor.get(5));
+      bezier(x1, y1, x2, y2, x3, y3, x4, y4);
       
       currentX += (currentBoxWidth * operations[0]);
     }
@@ -127,17 +156,11 @@ void createQuadrant(int quadNum) {
   }
 }
 
-void setup() {
-  // Constant ang mas maganda kaso ayaw ng processing
-  size(400, 400);
- // background(#7fff00);
-  
-  //createGrids();
-  
+void mouseClicked() {
   createModuloData();
 }
 
-void mouseClicked() {
+void keyPressed() {
   createModuloData();
 }
 
