@@ -5,7 +5,7 @@ final float ORIGIN = HALF_SIZE;
 final int MAX = 4;
 
 
-int[] shapeData = new int[MAX];
+float[][] shapeData = new float[MAX][2];
 int[][] colorData = new int[MAX][3];
 
 void createModuloData() {
@@ -16,7 +16,16 @@ void createModuloData() {
     colors[2] = floor(random(0, 255));
     
     colorData[i] = colors;
+    
+    float[] shape = new float[2];
+    shape[0] = random(0, 100) / 100;
+    shape[1] = random(0, 100) / 100;
+    
+    shapeData[i] = shape;
   }
+  
+  // x + (width * 0.10)
+  bezier(0, 0, 30, 30, 20, 50, 100, 100);
 }
 
 // Bumubuo ng mga kahon
